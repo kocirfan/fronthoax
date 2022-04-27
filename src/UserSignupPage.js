@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 //bir class Component- statefull 
 
@@ -23,6 +24,20 @@ class UserSignupPage extends React.Component{
         });
     }
 
+    onClickSignup = event => {
+        event.preventDefault();
+
+        const {username, displayName, password} = this.state;  //object destruction
+
+        const body = {  //key-value aynı ise 
+            username,
+            displayName,
+            password
+        }
+
+        axios.post('/api/1.0/users', body);
+
+    };
     
 
     //ovveride ettiği metot/ class componentlerde render zorunlu
@@ -47,7 +62,7 @@ class UserSignupPage extends React.Component{
                     <label>Password Repeat</label>
                     <input name="passwordRepeat" type="password" onChange={this.onChange} />
                 </div>
-                <button>Sign Up</button>
+                <button onClick={this.onClickSignup}>Sign Up</button>
             </form>    
         );
     }
