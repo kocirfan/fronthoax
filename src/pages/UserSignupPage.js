@@ -1,6 +1,7 @@
 import React from "react";
 import {signup} from "../api/apiCalls";
 import Input from "../components/Input";
+import { withTranslation} from 'react-i18next';
 
 //bir class Component- statefull
 
@@ -16,14 +17,15 @@ class UserSignupPage extends React.Component {
   };
 
   onChange = (event) => {
+    const { t } = this.props;
     const { name, value } = event.target; //object destruction
     const errors = {...this.state.errors} // errors objesinin kopyasını oluşturmak ...
     errors[name] = undefined;
     if(name === 'password' || name === 'passwordRepeat'){
       if(name === 'password' && value !== this.state.passwordRepeat){
-        errors.passwordRepeat = 'Password mismatch';
+        errors.passwordRepeat = t('Password mismatch');
       }else if(name === 'passwordRepeat' && value !== this.state.password){
-        errors.passwordRepeat = 'Password mismatctc';
+        errors.passwordRepeat = t('Password mismatch');
       }else{
         errors.passwordRepeat = undefined;
       }
@@ -67,15 +69,16 @@ class UserSignupPage extends React.Component {
   render() {
     const {pendingApiCall, errors} = this.state;
     const {username, displayName, password, passwordRepeat} = errors;
+    const { t } = this.props;
     // render metodu bir jsx dönmelidir
     return (
       <div className="container">
         <form>
-          <h1 className="text-center">Sign Up</h1>
-          <Input name="username" label="Username" error={username} onChange={this.onChange} />
-          <Input name="displayName" label="Display Name" error={displayName} onChange={this.onChange} />
-          <Input name="password" label="Password" error={password} type="password" onChange={this.onChange} />
-          <Input name="passwordRepeat" label="password Repeat" error={passwordRepeat} type="password" onChange={this.onChange} />
+          <h1 className="text-center">{t('Sign Up')}</h1>
+          <Input name="username" label={t("Username")} error={username} onChange={this.onChange} />
+          <Input name="displayName" label={t("Display Name")} error={displayName} onChange={this.onChange} />
+          <Input name="password" label={t("Password")} error={password} type="password" onChange={this.onChange} />
+          <Input name="passwordRepeat" label={t("Password Repeat")} error={passwordRepeat} type="password" onChange={this.onChange} />
          
           <div className="text-center">
             <button 
@@ -83,7 +86,7 @@ class UserSignupPage extends React.Component {
              onClick={this.onClickSignup}
              disabled={pendingApiCall || passwordRepeat !== undefined}>
                  {pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}
-                 Sign Up
+                 {t('Sign Up')}
             </button>
           </div>
         </form>
@@ -94,4 +97,6 @@ class UserSignupPage extends React.Component {
 
 // Koşullu Render örneği- Conditional rendering {this.state.pendingApiCall && <span className="spinner-border spinner-border-sm"></span>} 
 
-export default UserSignupPage;
+// translation için
+const UserSignupPageWithTranslation = withTranslation()(UserSignupPage);  // Higher Order Component
+export default UserSignupPageWithTranslation;

@@ -5,7 +5,7 @@ import './bootstrap-ovveride.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import UserSignupPage from './pages/UserSignupPage';
-
+import './i18n';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
