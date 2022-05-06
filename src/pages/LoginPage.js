@@ -2,36 +2,20 @@ import React from "react";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 import { login } from "../api/apiCalls";
-import axios from "axios";
+
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { withApiProgress } from "../shared/ApiProgress";
 
 class LoginPage extends React.Component {
   state = {
     username: null,
     password: null,
-    error: null,
-    pendigApiCall: false,
+    error: null
   };
 
-  componentDidMount() {
-    axios.interceptors.request.use((request) => {
-      this.setState({ pendigApiCall: true });
-      return request;
-    });
+  
 
-    axios.interceptors.response.use(
-      (response) => {
-        this.setState({ pendigApiCall: false });
-        return response;
-      },
-      (error) => {
-        this.setState({ pendigApiCall: false });
-        throw error;
-      }
-    );
-  }
-
-  onChange = (event) => {
+  onChange = event => {
     const { name, value } = event.target;
 
     this.setState({
@@ -61,8 +45,8 @@ class LoginPage extends React.Component {
   };
 
   render() {
-    const { t } = this.props;
-    const { username, password, error, pendigApiCall } = this.state;
+    const { t, pendingApiCall } = this.props;
+    const { username, password, error } = this.state;
     const buttonEnabled = username && password;
     return (
       <div className="container">
@@ -84,8 +68,8 @@ class LoginPage extends React.Component {
           <div className="text-center mt-2">
             <ButtonWithProgress
               onClick={this.onClickLogin}
-              disabled={!buttonEnabled || pendigApiCall}
-              pendigApiCall={pendigApiCall}
+              disabled={!buttonEnabled || pendingApiCall}
+              pendingApiCall={pendingApiCall}
               text={t('Login')}
             />
           </div>
@@ -94,4 +78,7 @@ class LoginPage extends React.Component {
     );
   }
 }
-export default withTranslation()(LoginPage);
+
+const LoginPageWithTranslation = withTranslation()(LoginPage);
+export default withApiProgress(LoginPageWithTranslation, '/api/1.0/auth');
+

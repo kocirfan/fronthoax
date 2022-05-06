@@ -2,22 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './bootstrap-ovveride.scss';
-import App from './App';
+import App from './container/App';
 import reportWebVitals from './reportWebVitals';
-import UserSignupPage from './pages/UserSignupPage';
 import './i18n';
-import LoginPage from './pages/LoginPage';
-import LanguageSelector from './components/LanguageSelector';
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <div>
-    <LoginPage />
-    <LanguageSelector />
-    </div>
-    
-    
+   <App/>
   </React.StrictMode>
 );
 
