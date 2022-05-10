@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Input from "../components/Input";
 import { useTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
-import { withApiProgress } from "../shared/ApiProgress";
+import { useApiProgress } from "../shared/ApiProgress";
 import { useDispatch } from "react-redux";
 import { signupHandler } from "../redux/authAction";
 
@@ -55,8 +55,11 @@ const UserSignupPage = (props) => {
     password: passwordError,
   } = errors;
 
-  const {t} = useTranslation();
-  const {  pendingApiCall } = props;
+  const { t } = useTranslation();
+  const pendingApiCallSignup = useApiProgress("/api/1.0/users");
+  const pendingApiCallLogin = useApiProgress("/api/1.0/auth");
+
+  const pendingApiCall = pendingApiCallSignup || pendingApiCallLogin;
 
   let passwordRepeatError;
   if (form.password !== form.passwordRepeat) {
@@ -107,18 +110,4 @@ const UserSignupPage = (props) => {
   );
 };
 
-// Koşullu Render örneği- Conditional rendering {this.state.pendingApiCall && <span className="spinner-border spinner-border-sm"></span>}
-
-// translation için
-
-const UserSignupPageWithApiProgressForSignupRequest = withApiProgress(
-  UserSignupPage,
-  "/api/1.0/users"
-); // Higher Order Component
-const UserSignupPageWithApiProgressForAuthRequest = withApiProgress(
-  UserSignupPageWithApiProgressForSignupRequest,
-  "/api/1.0/auth"
-);
-
- // Higher Order Component
-export default UserSignupPageWithApiProgressForAuthRequest;
+export default UserSignupPage;
