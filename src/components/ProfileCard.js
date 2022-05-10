@@ -4,6 +4,9 @@ import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 const ProfileCard = (props) => {
+  // ** useContext
+  //const context = useContext(Authentication);
+
   const pathUsername = props.match.params.username;
   let message = "We cannot edit";
   if (pathUsername === props.loggedInUsername) {
@@ -12,6 +15,7 @@ const ProfileCard = (props) => {
   return <div> {message}</div>;
 };
 
+// ** redux
 const mapStateProps = (store) => {
   return {
     loggedInUsername: store.username,
@@ -19,3 +23,6 @@ const mapStateProps = (store) => {
 };
 
 export default connect(mapStateProps)(withRouter(ProfileCard));
+
+// ** useContext
+//export default withRouter(ProfileCard);

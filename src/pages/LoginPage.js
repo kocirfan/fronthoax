@@ -7,8 +7,7 @@ import { connect } from "react-redux";
 import { loginHandler } from "../redux/authAction";
 
 const LoginPage = (props) => {
-  //// static contextType = Authentication;
-
+  
   //hooks-useState
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
