@@ -1,15 +1,24 @@
 import React from "react";
 import logo from "../assets/hoaxify.png";
 import { Link } from "react-router-dom";
-import { withTranslation } from "react-i18next";
-import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutSuccess } from "../redux/authAction";
 
 const TopBar = (props) => {
   //hooks-useContext
   //const context = useContext(Authentication);
 
-  const { t, isLoggedIn, username, onLogoutSuccess } = props;
+  const {t} = useTranslation();
+  const {username, isLoggedIn} = useSelector((store) => ({
+     isLoggedIn: store.isLoggedIn,
+     username: store.username,
+  }));
+
+  const dispatch = useDispatch();
+  const onLogoutSuccess = () =>{
+    dispatch(logoutSuccess());
+  }
 
   let links = (
     <ul className="navbar-nav position-absolute top-0 end-0">
@@ -55,22 +64,10 @@ const TopBar = (props) => {
   );
 };
 
-const TopBarWithTranslation = withTranslation()(TopBar);
 
 // ** redux **
-const mapStateProps = (store) => {
-  return {
-    isLoggedIn: store.isLoggedIn,
-    username: store.username,
-  };
-};
-const mapDispatchProps = (dispatch) => {
-  return {
-    onLogoutSuccess: () => dispatch(logoutSuccess()),
-  };
-};
 
-export default connect(mapStateProps, mapDispatchProps)(TopBarWithTranslation);
+export default TopBar;
 
 // ** useContext **
 //export default TopBarWithTranslation;
