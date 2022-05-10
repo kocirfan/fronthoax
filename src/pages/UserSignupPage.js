@@ -1,13 +1,13 @@
-import React from "react";
-import { signup } from "../api/apiCalls";
+import React, { Component } from "react";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { withApiProgress } from "../shared/ApiProgress";
-
+import { connect } from "react-redux";
+import { signupHandler } from "../redux/authAction";
 //bir class Component- statefull
 
-class UserSignupPage extends React.Component {
+class UserSignupPage extends Component {
   //ovveride metot state
   state = {
     username: null,
@@ -37,12 +37,15 @@ class UserSignupPage extends React.Component {
 
     this.setState({
       [name]: value, //[name]: value name ile value set ediliyor
-      errors
+      errors,
     });
   };
 
   onClickSignup = async (event) => {
     event.preventDefault();
+
+    const { history, dispatch } = this.props;
+    const { push } = history;
 
     const { username, displayName, password } = this.state; //object destruction
 
@@ -52,23 +55,22 @@ class UserSignupPage extends React.Component {
       displayName,
       password,
     };
-    
 
     try {
-      const response = await signup(body);
+      await dispatch(signupHandler(body));
+      push("/");
     } catch (error) {
       if (error.response.data.validationErrors) {
         this.setState({ errors: error.response.data.validationErrors });
       }
     }
 
-    
     // aktif sorgu olduğu durumda tekrarlayan işlemi önlemk adına axios da durum yönetimi
   };
 
   //ovveride ettiği metot/ class componentlerde render zorunlu
   render() {
-    const {  errors } = this.state;
+    const { errors } = this.state;
     const { username, displayName, password, passwordRepeat } = errors;
     const { t, pendingApiCall } = this.props;
     // render metodu bir jsx dönmelidir
@@ -105,13 +107,11 @@ class UserSignupPage extends React.Component {
 
           <div className="text-center">
             <ButtonWithProgress
-              
               onClick={this.onClickSignup}
               disabled={pendingApiCall || passwordRepeat !== undefined}
               pendingApiCall={pendingApiCall}
-              text={t('Sign Up')}
+              text={t("Sign Up")}
             />
-              
           </div>
         </form>
       </div>
@@ -123,6 +123,13 @@ class UserSignupPage extends React.Component {
 
 // translation için
 
-const UserSignupPageWithApiProgress = withApiProgress(UserSignupPage, '/api/1.0/users'); // Higher Order Component
-const UserSignupPageWithTranslation = withTranslation()(UserSignupPageWithApiProgress ); // Higher Order Component
-export default UserSignupPageWithTranslation;
+const UserSignupPageWithApiProgressForSignupRequest = withApiProgress(
+  UserSignupPage,
+  "/api/1.0/users"
+); // Higher Order Component
+const UserSignupPageWithApiProgressForAuthRequest = withApiProgress(UserSignupPageWithApiProgressForSignupRequest, '/api/1.0/auth');
+
+const UserSignupPageWithTranslation = withTranslation()(
+  UserSignupPageWithApiProgressForAuthRequest
+); // Higher Order Component
+export default connect()(UserSignupPageWithTranslation);
