@@ -10,7 +10,7 @@ const LanguageSelector = (props) => {
     changeLanguage(language);
   };
   return (
-    <div className="container">
+    <div className="container mt-2">
       <img
         src="https://countryflagsapi.com/tr/flat/24.png"
         alt="Turkey flag"

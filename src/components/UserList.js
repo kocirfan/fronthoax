@@ -5,20 +5,39 @@ import  UserListItem  from "./UserListItem";
 
 class UserList extends Component {
   state = {
-    users: [],
+    page: {
+      content: [],
+      size: 3,
+      number: 0
+    }
   };
 
   componentDidMount() {
-    getUsers().then((response) => {
+    this.loadUsers();
+  }
+
+  //pagination ve gezinme
+  onClickNext = () => {
+    const nextPage = this.state.page.number + 1;
+    this.loadUsers(nextPage);
+  };
+
+  onClickPrevious = () => {
+    let previousPage = this.state.page.number - 1;
+    this.loadUsers(previousPage);
+  }
+
+  loadUsers = page =>{
+    getUsers(page).then((response) => {
       this.setState({
-        users: response.data.content
+        page: response.data
       });
     });
   }
 
   render() {
     const { t } = this.props;
-    const { users } = this.state;
+    const { content: users, last, first } = this.state.page;
 
     return (
       <div className="card">
@@ -28,6 +47,10 @@ class UserList extends Component {
             <UserListItem key={user.username} user={user} />
           ))}
         </div>
+        <div>
+          {first === false && <button className="btn btn-sm btn-light" onClick={this.onClickPrevious}>{t('Previous')}</button>}
+          {last === false && <button className="btn btn-sm btn-light float-end" onClick={this.onClickNext}>{t('Next')}</button>}
+          </div>
       </div>
     );
   }
