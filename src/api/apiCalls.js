@@ -12,3 +12,8 @@ export const login = creds =>{
 export const changeLanguage = language => {
     axios.defaults.headers['accept-language'] = language;
 }
+
+//user listele
+export const getUsers = () =>{
+    return axios.get('api/1.0/users');
+}
